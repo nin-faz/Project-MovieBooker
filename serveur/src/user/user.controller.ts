@@ -42,8 +42,8 @@ export class UserController {
             },
         },
     })
-    getUsers() {
-        return this.userService.getUsers();
+    getAllUsers() {
+        return this.userService.getAllUsers();
     }
 
     @Get('/user/:userId')
@@ -89,8 +89,8 @@ export class UserController {
         return await this.userService.login({ authBody });
     }
 
-    @UseGuards(JwtAuthGuard)
     @Get()
+    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
     @ApiOkResponse({
         description: 'Authenticated user',

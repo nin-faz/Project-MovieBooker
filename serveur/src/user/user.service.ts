@@ -17,7 +17,7 @@ export class UserService {
         private readonly jwtService: JwtService,
     ) {}
 
-    async getUsers() {
+    async getAllUsers() {
         const users = await this.prisma.user.findMany({
             select: {
                 userId: true,

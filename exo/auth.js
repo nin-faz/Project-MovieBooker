@@ -3,15 +3,6 @@ const user = {
   password: "1234",
 };
 
-const register = async (email, password) => {
-  const newUser = {
-    email,
-    password,
-  };
-
-  return generateToken(newUser);
-};
-
 function generateToken(user) {
   const payload = JSON.stringify({ email: user.email });
   const token = btoa(payload);

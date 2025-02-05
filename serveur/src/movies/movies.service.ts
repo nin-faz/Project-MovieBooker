@@ -63,14 +63,12 @@ export class MoviesService {
         title,
         page,
     }: {
-        title: string | null;
-        page: number | null;
+        title?: string;
+        page?: number;
     }): Promise<any> {
-        let url = '';
+        let url = `https://api.themoviedb.org/3/search/movie?query=${title}`;
         if (page) {
-            url = `https://api.themoviedb.org/3/search/movie?query=${title}&page=${page}`;
-        } else {
-            url = `https://api.themoviedb.org/3/search/movie?query=${title}`;
+            url += `&page=${page}`;
         }
 
         const options = {
@@ -114,6 +112,11 @@ export class MoviesService {
             'vote_count.asc',
             'vote_count.desc',
         ];
+
+        if (!filter.includes(sort)) {
+            throw new BadRequestException('Invalid sort parameter');
+        }
+
         const url = `https://api.themoviedb.org/3/discover/movie?sort_by=${sort}&language=en-US`;
         const options = {
             method: 'GET',
@@ -127,9 +130,6 @@ export class MoviesService {
             .then((res) => res.json())
             .catch((err) => console.error(err));
 
-        if (!filter.includes(sort)) {
-            throw new BadRequestException('Invalid sort parameter');
-        }
         return response;
     }
 }

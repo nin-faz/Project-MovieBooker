@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
     ApiNotFoundResponse,
@@ -12,7 +12,35 @@ export class MoviesController {
     constructor(private readonly moviesService: MoviesService) {}
     @Get('/movies')
     @ApiOkResponse({
-        description: 'List of all movies',
+        description:
+            'List of all movies without parameters.<br>' +
+            'If title and page are provided, it will return the movie with that title and page. ' +
+            'Without page it will just return with title.<br>' +
+            'If sort is provided, it will return the movies sorted by the provided parameter.',
+    })
+    @ApiNotFoundResponse({
+        description: 'No movie found or invalid page number',
+    })
+    @ApiBadRequestResponse({
+        description: 'Invalid sort parameter ',
+    })
+    @ApiQuery({
+        name: 'title',
+        type: 'string',
+        example: 'Harry Potter',
+        required: false,
+    })
+    @ApiQuery({
+        name: 'page',
+        type: Number,
+        example: 2,
+        required: false,
+    })
+    @ApiQuery({
+        name: 'sort',
+        type: 'string',
+        example: 'vote_average.asc',
+        required: false,
     })
     getAllMovies(
         @Query() params: { title: string; page: number; sort: string },
@@ -55,7 +83,7 @@ export class MoviesController {
         example: 1,
         required: false,
     })
-    getMovie(@Query() params: { title: string | null; page: number | null }) {
+    getMovie(@Query() params: { title?: string; page?: number }) {
         return this.moviesService.getMovie(params);
     }
 

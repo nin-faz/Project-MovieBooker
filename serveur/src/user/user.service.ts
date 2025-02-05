@@ -3,7 +3,7 @@ import {
     UnauthorizedException,
     ConflictException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/registerDto';
 import { hash, compare } from 'bcrypt';

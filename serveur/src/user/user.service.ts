@@ -41,36 +41,36 @@ export class UserService {
     }
 
     async register({ registerBody }: { registerBody: RegisterDto }) {
-        try {
-            const { email, password, firstName } = registerBody;
+        // try {
+        const { email, password, firstName } = registerBody;
 
-            const existingUser = await this.prisma.user.findUnique({
-                where: { email },
-            });
+        const existingUser = await this.prisma.user.findUnique({
+            where: { email },
+        });
 
-            if (existingUser) {
-                throw new ConflictException('User already exists');
-            }
-
-            const hashPassword = await this.hashPassword({ password });
-
-            const newUser = await this.prisma.user.create({
-                data: {
-                    firstName,
-                    email,
-                    password: hashPassword,
-                },
-            });
-
-            console.log('Success : User registered !', { existingUser });
-            return this.authenticateUser({ userId: newUser.userId });
-        } catch (error) {
-            console.log('User not registered !', { error });
-            return {
-                error: true,
-                message: error.message,
-            };
+        if (existingUser) {
+            throw new ConflictException('User already exists');
         }
+
+        const hashPassword = await this.hashPassword({ password });
+
+        const newUser = await this.prisma.user.create({
+            data: {
+                firstName,
+                email,
+                password: hashPassword,
+            },
+        });
+
+        console.log('Success : User registered !', { existingUser });
+        return this.authenticateUser({ userId: newUser.userId });
+        // } catch (error) {
+        //     console.log('User not registered !', { error });
+        //     return {
+        //         error: true,
+        //         message: error.message,
+        //     };
+        // }
     }
 
     private async hashPassword({ password }: { password: string }) {
@@ -78,35 +78,35 @@ export class UserService {
     }
 
     async login({ authBody }: { authBody: LoginDto }) {
-        try {
-            const { email, password } = authBody;
+        // try {
+        const { email, password } = authBody;
 
-            const existingUser = await this.prisma.user.findUnique({
-                where: { email },
-            });
+        const existingUser = await this.prisma.user.findUnique({
+            where: { email },
+        });
 
-            if (!existingUser) {
-                throw new UnauthorizedException("User doesn't exist");
-            }
-
-            const isPasswordValid = await this.verifyPassword({
-                password,
-                hashedPassword: existingUser.password,
-            });
-
-            if (!isPasswordValid) {
-                throw new UnauthorizedException('Invalid password');
-            }
-
-            console.log('Success : User logged in !', { existingUser });
-            return this.authenticateUser({ userId: existingUser.userId });
-        } catch (error) {
-            console.log('User not logged in !', { error });
-            return {
-                error: true,
-                message: error.message,
-            };
+        if (!existingUser) {
+            throw new UnauthorizedException("User doesn't exist");
         }
+
+        const isPasswordValid = await this.verifyPassword({
+            password,
+            hashedPassword: existingUser.password,
+        });
+
+        if (!isPasswordValid) {
+            throw new UnauthorizedException('Invalid password');
+        }
+
+        console.log('Success : User logged in !', { existingUser });
+        return this.authenticateUser({ userId: existingUser.userId });
+        // } catch (error) {
+        //     console.log('User not logged in !', { error });
+        //     return {
+        //         error: true,
+        //         message: error.message,
+        //     };
+        // }
     }
 
     private async verifyPassword({

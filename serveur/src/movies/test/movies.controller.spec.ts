@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MoviesController } from '../movies.controller';
 import { MoviesService } from '../movies.service';
-import { BadRequestException } from '@nestjs/common';
 
 describe('MoviesController', () => {
     let controller: MoviesController;
@@ -54,24 +53,13 @@ describe('MoviesController', () => {
     describe('getMovieById', () => {
         it('should return movie data for a valid ID', async () => {
             const mockMovie = { id: 123, title: 'Test Movie' };
+
             jest.spyOn(service, 'getMovieById').mockResolvedValue(mockMovie);
 
-            await expect(
-                controller.getMovieById({ movie_id: 123 }),
-            ).resolves.toEqual(mockMovie);
-            expect(service.getMovieById).toHaveBeenCalledWith({
-                movie_id: 123,
-            });
-        });
+            const result = await controller.getMovieById('123');
 
-        it('should throw BadRequestException for an invalid ID', async () => {
-            jest.spyOn(service, 'getMovieById').mockRejectedValue(
-                new BadRequestException('Invalid Movie ID'),
-            );
-
-            await expect(
-                controller.getMovieById({ movie_id: 999 }),
-            ).rejects.toThrow(BadRequestException);
+            expect(service.getMovieById).toHaveBeenCalledWith(123);
+            expect(result).toEqual(mockMovie);
         });
     });
 

@@ -1,8 +1,9 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, Param } from '@nestjs/common';
 import {
     ApiBadRequestResponse,
     ApiNotFoundResponse,
     ApiOkResponse,
+    ApiParam,
     ApiQuery,
 } from '@nestjs/swagger';
 import { MoviesService } from './movies.service';
@@ -52,17 +53,20 @@ export class MoviesController {
     @ApiOkResponse({
         description: 'Get movie by ID',
     })
-    @ApiQuery({
-        name: 'movie_id',
+    @ApiParam({
+        name: 'movieId',
         type: Number,
         required: true,
         example: 939243,
     })
+    @ApiNotFoundResponse({
+        description: 'Page not found',
+    })
     @ApiBadRequestResponse({
         description: 'Invalid Movie ID',
     })
-    getMovieById(@Query() params: { movie_id: number }) {
-        return this.moviesService.getMovieById(params);
+    getMovieById(@Param('movieId') movieId: string) {
+        return this.moviesService.getMovieById(Number(movieId));
     }
 
     @Get('/search/movie')

@@ -68,18 +68,32 @@ describe('UserController', () => {
     });
 
     describe('register', () => {
-        it('should register a user and return an access token', async () => {
+        it('should register a user and return a success message with newUser', async () => {
             const registerBody: RegisterDto = {
                 firstName: 'John',
                 email: 'john@example.com',
-                password: 'password123',
+                password: 'password',
             };
-            const mockToken = { access_token: 'mockedToken' };
 
-            jest.spyOn(userService, 'register').mockResolvedValue(mockToken);
+            const mockNewUser = {
+                userId: 1,
+                firstName: 'John',
+                email: 'john@example.com',
+                password: 'hashedPassword',
+                role: Role.User,
+            };
+
+            const mockResponse = {
+                message: 'Success : User registered !',
+                newUser: mockNewUser,
+            };
+
+            jest.spyOn(userService, 'register').mockResolvedValue(mockResponse);
 
             const result = await userController.register(registerBody);
-            expect(result).toEqual(mockToken);
+
+            expect(result).toEqual(mockResponse);
+
             expect(userService.register).toHaveBeenCalledWith({ registerBody });
         });
     });

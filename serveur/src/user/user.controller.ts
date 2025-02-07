@@ -6,6 +6,7 @@ import {
     Param,
     UseGuards,
     Request,
+    HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterDto } from './dto/registerDto';
@@ -85,6 +86,7 @@ export class UserController {
         description: "User doesn't exist",
     })
     @ApiBody({ type: LoginDto })
+    @HttpCode(200)
     async login(@Body() authBody: LoginDto) {
         return await this.userService.login({ authBody });
     }

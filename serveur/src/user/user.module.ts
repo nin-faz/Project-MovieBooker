@@ -2,9 +2,9 @@ import { Module } from '@nestjs/common';
 import { UserService } from './user.service';
 import { JwtModule } from '@nestjs/jwt';
 import { UserController } from './user.controller';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { APP_GUARD } from '@nestjs/core';
-import { RolesGuard } from 'src/guards/roles.guard';
+import { RolesGuard } from '../guards/roles.guard';
 import { JwtStrategy } from './jwt/jwt.strategy';
 
 @Module({

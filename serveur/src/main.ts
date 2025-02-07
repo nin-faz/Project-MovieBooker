@@ -6,6 +6,13 @@ import { ValidationPipe } from '@nestjs/common';
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
 
+    app.enableCors({
+        origin: ['http://localhost:3000', 'https://mon-site.com'],
+        methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+        allowedHeaders: 'Content-Type, Authorization',
+        credentials: true,
+    });
+
     const config = new DocumentBuilder()
         .setTitle('Movie Booker API')
         .setDescription('API for booking movies')
@@ -16,6 +23,7 @@ async function bootstrap() {
             bearerFormat: 'Token',
         })
         .build();
+
     const documentFactory = () => SwaggerModule.createDocument(app, config);
     SwaggerModule.setup('api', app, documentFactory);
 

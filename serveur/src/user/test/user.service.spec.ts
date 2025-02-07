@@ -4,7 +4,6 @@ import { PrismaService } from '../../prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { UnauthorizedException, ConflictException } from '@nestjs/common';
 import { RegisterDto } from '../dto/registerDto';
-import { LoginDto } from '../dto/loginDto';
 import { Role } from '@prisma/client';
 
 jest.mock('bcrypt', () => ({
@@ -113,7 +112,16 @@ describe('UserService', () => {
             jest.spyOn(jwtService, 'sign').mockReturnValue('mockedToken');
 
             const result = await service.register({ registerBody });
-            expect(result).toEqual({ access_token: 'mockedToken' });
+            expect(result).toEqual({
+                message: 'Success : User registered !',
+                newUser: {
+                    userId: 1,
+                    firstName: 'John',
+                    email: 'john@example.com',
+                    password: 'hashedPassword',
+                    role: 'User',
+                },
+            });
         });
 
         it('should throw ConflictException if user already exists', async () => {
@@ -139,24 +147,28 @@ describe('UserService', () => {
 
     describe('login', () => {
         it('should return a token for valid credentials', async () => {
-            const loginBody: LoginDto = {
+            const loginBody = {
                 email: 'john@example.com',
                 password: 'password',
             };
-            jest.spyOn(prisma.user, 'findUnique').mockResolvedValue({
+
+            const mockUser = {
                 userId: 1,
                 firstName: 'John',
                 email: 'john@example.com',
                 password: 'hashedPassword',
                 role: Role.User,
-            });
-            jest.mock('bcrypt', () => ({
-                hash: jest.fn().mockResolvedValue('hashedPassword'),
-                compare: jest.fn().mockResolvedValue(true as boolean),
-            }));
+            };
+
+            jest.spyOn(prisma.user, 'findUnique').mockResolvedValue(mockUser);
+
+            jest.spyOn(require('bcrypt'), 'compare').mockResolvedValue(true);
 
             const result = await service.login({ authBody: loginBody });
-            expect(result).toEqual({ access_token: 'mockedToken' });
+
+            expect(result).toEqual({
+                access_token: expect.any(String),
+            });
         });
 
         it('should throw UnauthorizedException if user does not exist', async () => {

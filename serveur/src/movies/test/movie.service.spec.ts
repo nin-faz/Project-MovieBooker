@@ -20,24 +20,39 @@ describe('MoviesService', () => {
     describe('getMovieById', () => {
         it('should return movie data if movie_id is valid', async () => {
             jest.spyOn(global, 'fetch').mockResolvedValue({
-                json: jest
-                    .fn()
-                    .mockResolvedValue({ id: 123, title: 'Test Movie' }),
+                json: jest.fn().mockResolvedValue({
+                    id: 123,
+                    title: 'Test Movie',
+                    vote_average: 8.5,
+                    video: false,
+                    release_date: '2024-02-01',
+                    original_language: 'en',
+                    adult: false,
+                    overview: 'Test description',
+                    poster_path: 'test_poster.jpg',
+                }),
             } as any);
 
-            await expect(
-                service.getMovieById({ movie_id: 123 }),
-            ).resolves.toEqual({ id: 123, title: 'Test Movie' });
+            await expect(service.getMovieById(123)).resolves.toEqual({
+                title: 'Test Movie',
+                poster: 'test_poster.jpg',
+                description: 'Test description',
+                vote_average: 8.5,
+                video: false,
+                release_date: '2024-02-01',
+                original_language: 'en',
+                adult: false,
+            });
         });
 
         it('should throw BadRequestException if movie_id is invalid', async () => {
             jest.spyOn(global, 'fetch').mockResolvedValue({
-                json: jest.fn().mockResolvedValue({}),
+                json: jest.fn().mockResolvedValue(null),
             } as any);
 
-            await expect(
-                service.getMovieById({ movie_id: 999 }),
-            ).rejects.toThrow(BadRequestException);
+            await expect(service.getMovieById(999)).rejects.toThrow(
+                BadRequestException,
+            );
         });
     });
 

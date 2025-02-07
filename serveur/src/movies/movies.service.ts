@@ -35,11 +35,15 @@ export class MoviesService {
             .then((res) => res.json())
             .catch((err) => console.error(err));
 
+        if (response.total_results === 0) {
+            throw new NotFoundException('No movies found');
+        }
+
         return response;
     }
 
-    async getMovieById({ movie_id }: { movie_id: number }): Promise<any> {
-        const url = `https://api.themoviedb.org/3/movie/${movie_id}?language=en-US`;
+    async getMovieById(movieId: number): Promise<any> {
+        const url = `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`;
         const options = {
             method: 'GET',
             headers: {
@@ -48,15 +52,30 @@ export class MoviesService {
             },
         };
 
+        if (!url) {
+            throw new NotFoundException('Page not found');
+        }
+
         const response = await fetch(url, options)
             .then((res) => res.json())
-            .catch((err) => console.error(err));
+            .catch((err) => {
+                console.error(err);
+            });
 
-        if (!response.id) {
+        if (!response) {
             throw new BadRequestException('Invalid Movie ID');
         }
 
-        return response;
+        return {
+            title: response.title,
+            poster: response.poster_path,
+            description: response.overview,
+            vote_average: response.vote_average,
+            video: response.video,
+            release_date: response.release_date,
+            original_language: response.original_language,
+            adult: response.adult,
+        };
     }
 
     async getMovie({
@@ -82,6 +101,8 @@ export class MoviesService {
         const response = await fetch(url, options)
             .then((res) => res.json())
             .catch((err) => console.error(err));
+
+        console.log('API Response:', response);
 
         const totalPage = response.total_pages;
         if (page != null && page > totalPage) {

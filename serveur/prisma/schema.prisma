@@ -13,9 +13,22 @@ model User {
   email     String  @unique
   password  String
   role      Role    @default(User)
+  reservations Reservation[]
 }
 
 enum Role {
   User
   Admin
+}
+
+model Reservation {
+  reservationId         Int      @id @default(autoincrement())
+  userId     Int
+  movieId    Int
+  reservedAt DateTime
+  endsAt     DateTime
+
+  user  User  @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@index([userId, movieId])
 }

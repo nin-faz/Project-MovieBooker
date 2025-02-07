@@ -1,0 +1,82 @@
+/* Style général du body */
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9;
+}
+
+/* Style pour la barre de navigation */
+.navbar {
+  background-color: #343a40;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .navbar-brand {
+  color: #fff;
+  font-weight: bold;
+}
+
+.navbar .nav-link {
+  color: #ddd;
+}
+
+.navbar .nav-link:hover {
+  color: #f1f1f1;
+}
+
+/* Style pour la grille des films */
+.movie-grid {
+  padding: 30px 10%;
+}
+
+.card {
+  border: none;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+  border-radius: 10px;
+  max-height: 300px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.card img:hover {
+  transform: scale(1.05);
+}
+
+.card-body {
+  background-color: #fff;
+  padding: 20px;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.card-text {
+  color: #777;
+  font-size: 1rem;
+  height: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-body .btn-primary {
+  background-color: #007bff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+}
+
+.card-body .btn-primary:hover {
+  background-color: #0056b3;
+  transition: background-color 0.3s ease;
+}

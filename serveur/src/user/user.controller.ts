@@ -6,6 +6,7 @@ import {
     Param,
     UseGuards,
     Request,
+    HttpCode,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { RegisterDto } from './dto/registerDto';
@@ -42,8 +43,8 @@ export class UserController {
             },
         },
     })
-    getUsers() {
-        return this.userService.getUsers();
+    getAllUsers() {
+        return this.userService.getAllUsers();
     }
 
     @Get('/user/:userId')
@@ -85,12 +86,13 @@ export class UserController {
         description: "User doesn't exist",
     })
     @ApiBody({ type: LoginDto })
+    @HttpCode(200)
     async login(@Body() authBody: LoginDto) {
         return await this.userService.login({ authBody });
     }
 
-    @UseGuards(JwtAuthGuard)
     @Get()
+    @UseGuards(JwtAuthGuard)
     @ApiBearerAuth()
     @ApiOkResponse({
         description: 'Authenticated user',

@@ -3,7 +3,7 @@ import {
     UnauthorizedException,
     ConflictException,
 } from '@nestjs/common';
-import { PrismaService } from 'src/prisma.service';
+import { PrismaService } from '../prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/registerDto';
 import { hash, compare } from 'bcrypt';
@@ -17,7 +17,7 @@ export class UserService {
         private readonly jwtService: JwtService,
     ) {}
 
-    async getUsers() {
+    async getAllUsers() {
         const users = await this.prisma.user.findMany({
             select: {
                 userId: true,
@@ -41,7 +41,6 @@ export class UserService {
     }
 
     async register({ registerBody }: { registerBody: RegisterDto }) {
-        // try {
         const { email, password, firstName } = registerBody;
 
         const existingUser = await this.prisma.user.findUnique({
@@ -62,15 +61,11 @@ export class UserService {
             },
         });
 
-        console.log('Success : User registered !', { existingUser });
-        return this.authenticateUser({ userId: newUser.userId });
-        // } catch (error) {
-        //     console.log('User not registered !', { error });
-        //     return {
-        //         error: true,
-        //         message: error.message,
-        //     };
-        // }
+        console.log('Success : User registered !', { newUser });
+        return {
+            message: 'Success : User registered !',
+            newUser,
+        };
     }
 
     private async hashPassword({ password }: { password: string }) {
@@ -78,7 +73,6 @@ export class UserService {
     }
 
     async login({ authBody }: { authBody: LoginDto }) {
-        // try {
         const { email, password } = authBody;
 
         const existingUser = await this.prisma.user.findUnique({
@@ -100,13 +94,6 @@ export class UserService {
 
         console.log('Success : User logged in !', { existingUser });
         return this.authenticateUser({ userId: existingUser.userId });
-        // } catch (error) {
-        //     console.log('User not logged in !', { error });
-        //     return {
-        //         error: true,
-        //         message: error.message,
-        //     };
-        // }
     }
 
     private async verifyPassword({

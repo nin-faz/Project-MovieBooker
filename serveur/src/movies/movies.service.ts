@@ -22,7 +22,7 @@ export class MoviesService {
             return this.getFilteredMovies({ sort });
         }
 
-        const url = 'https://api.themoviedb.org/3/movie/popular';
+        const url = 'https://api.themoviedb.org/3/movie/popular?page=${page}';
         const options = {
             method: 'GET',
             headers: {
@@ -147,7 +147,7 @@ export class MoviesService {
             },
         };
 
-        const response = fetch(url, options)
+        const response = await fetch(url, options)
             .then((res) => res.json())
             .catch((err) => console.error(err));
 

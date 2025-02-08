@@ -8,7 +8,7 @@ import MovieCard from "../components/MovieCard";
 import SearchBar from "../components/SearchBar";
 import Filter from "../components/Filter";
 
-const Home = () => {
+const HomePage = () => {
   const [movies, setMovies] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filter, setFilter] = useState("");
@@ -37,7 +37,7 @@ const Home = () => {
   }, [searchTerm, filter, page]);
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 flex flex-col flex-grow">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
         <SearchBar setSearchTerm={setSearchTerm} />
         <Filter setFilter={setFilter} />
@@ -69,4 +69,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HomePage;

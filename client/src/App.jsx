@@ -1,25 +1,42 @@
-import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import HomePage from "./pages/HomePage";
 import AuthPage from "./pages/AuthPage";
-
-import Header from "./components/Header";
-import Footer from "./components/Footer";
+import MovieDetails from "./pages/MovieDetails";
+import MyReservations from "./pages/MyReservations";
+import Layout from "./components/Layout";
+import Profile from "./pages/Profile";
+import MyReservationsHistory from "./pages/MyReservationsHistory";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-900 flex flex-col">
-        <Header />
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/auth" element={<AuthPage />} />
-        </Routes>
-        <Footer />
-      </div>
-    </Router>
+    <>
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+
+      <Router>
+        <Layout>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/movies/:movieId" element={<MovieDetails />} />
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/my-reservations" element={<MyReservations />} />
+            <Route
+              path="my-reservations-history"
+              element={<MyReservationsHistory />}
+            />
+            <Route path="/profile" element={<Profile />} />
+            <Route
+              path="*"
+              element={
+                <h1 className="flex items-center justify-center h-screen text-white text-4xl font-bold">
+                  404 - Not Found
+                </h1>
+              }
+            />
+          </Routes>
+        </Layout>
+      </Router>
+    </>
   );
 }
 

@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser, registerUser } from "../services/authService";
+import { login, register } from "../services/authService";
+import { toast } from "react-toastify";
+import { AuthContext } from "../context/AuthContext";
 
 const AuthPage = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -9,8 +11,9 @@ const AuthPage = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const { authLogin } = useContext(AuthContext);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -18,72 +21,93 @@ const AuthPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     try {
       if (isLogin) {
-        const response = await loginUser({
-          email: formData.email,
-          password: formData.password,
-        });
-        localStorage.setItem("token", response.access_token);
+        // Appeler l'API pour se connecter et obtenir la réponse
+        const { token } = await login(formData.email, formData.password);
+
+        if (token) {
+          authLogin({ token, user: {} });
+          toast.success("Connexion réussie !");
+          navigate("/");
+        } else {
+          throw new Error("Le token est manquant.");
+        }
       } else {
-        await registerUser(formData);
+        await register(formData);
+        toast.success("Inscription réussie !");
+        setIsLogin(true);
       }
-      navigate("/");
     } catch (err) {
-      setError(err.response?.data?.message || "An error occurred");
+      console.error("Erreur : ", err);
+
+      const errorMessage = err.message || "Une erreur est survenue.";
+
+      const existingToasts = document.querySelectorAll(".Toastify__toast");
+      const isAlreadyShown = [...existingToasts].some((toast) =>
+        toast.innerText.includes(errorMessage)
+      );
+
+      if (!isAlreadyShown) {
+        toast.error(errorMessage);
+      }
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-md rounded-xl">
-        <h2 className="text-xl font-bold text-center">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600">
+      <div className="w-full max-w-md p-8 space-y-6 bg-white shadow-lg rounded-xl border border-gray-200 transform transition duration-300 hover:scale-105">
+        <h2 className="text-2xl font-bold text-center text-gray-800">
           {isLogin ? "Connexion" : "Inscription"}
         </h2>
-        {error && <p className="text-red-500 text-center">{error}</p>}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5">
           {!isLogin && (
+            <div className="relative">
+              <input
+                type="text"
+                name="firstName"
+                placeholder="Prénom"
+                value={formData.firstName}
+                onChange={handleChange}
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none transition duration-200"
+                required
+              />
+            </div>
+          )}
+          <div className="relative">
             <input
-              type="text"
-              name="firstName"
-              placeholder="Prénom"
-              value={formData.firstName}
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={formData.email}
               onChange={handleChange}
-              className="w-full p-2 border rounded"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none transition duration-200"
               required
             />
-          )}
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="Mot de passe"
-            value={formData.password}
-            onChange={handleChange}
-            className="w-full p-2 border rounded"
-            required
-          />
+          </div>
+          <div className="relative">
+            <input
+              type="password"
+              name="password"
+              placeholder="Mot de passe"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-400 focus:outline-none transition duration-200"
+              required
+            />
+          </div>
           <button
             type="submit"
-            className="w-full p-2 text-white bg-blue-500 rounded hover:bg-blue-600"
+            className="w-full py-2 text-white font-semibold bg-indigo-500 rounded-lg hover:bg-indigo-600 transition duration-300 shadow-md"
           >
             {isLogin ? "Se connecter" : "S'inscrire"}
           </button>
         </form>
-        <p className="text-center">
+        <p className="text-center text-gray-600">
           {isLogin ? "Pas encore de compte ?" : "Déjà un compte ?"}{" "}
           <button
             onClick={() => setIsLogin(!isLogin)}
-            className="text-blue-500 hover:underline"
+            className="text-indigo-500 font-semibold hover:underline"
           >
             {isLogin ? "Inscrivez-vous" : "Connectez-vous"}
           </button>

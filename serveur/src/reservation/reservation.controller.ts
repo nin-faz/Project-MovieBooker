@@ -111,10 +111,14 @@ export class ReservationController {
         description: 'Reservation impossible, movie already started',
     })
     @ApiBody({ type: ReservationDto })
-    create(@Request() req, @Body() reservationBody: ReservationDto) {
+    create(
+        @Request() req,
+        @Param('movieId') movieId: number,
+        @Body() reservationBody: ReservationDto,
+    ) {
         return this.reservationService.createReservation({
             userId: req.user.userId,
-            reservationBody,
+            reservationBody: { ...reservationBody, movieId: Number(movieId) },
         });
     }
 

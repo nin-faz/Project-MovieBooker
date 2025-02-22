@@ -76,6 +76,10 @@ export class ReservationService {
         reservationBody: ReservationDto;
     }): Promise<any> {
         try {
+            if (!reservationBody || Object.keys(reservationBody).length === 0) {
+                throw new BadRequestException('Reservation data is required');
+            }
+
             const { movieId, reservedAt } = reservationBody;
 
             if (!userId) {

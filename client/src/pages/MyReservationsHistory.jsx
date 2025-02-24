@@ -1,8 +1,13 @@
 import useReservations from "../hooks/useReservations";
 import Loader from "../components/Loader";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 const MyReservationsHistory = () => {
+  useEffect(() => {
+    document.title = "Historique de mes réservations";
+  }, []);
+
   const { reservations, loading } = useReservations();
 
   if (loading) return <Loader />;
@@ -15,11 +20,11 @@ const MyReservationsHistory = () => {
   return (
     <div className="p-6 max-w-4xl mx-auto">
       <h1 className="text-2xl text-white font-bold mb-6 text-center">
-        📜 Réservations Passées
+        📜 Réservations passées
       </h1>
 
       <Link to="/my-reservations" className="text-blue-400 hover:underline">
-        ← Retour à Mes Réservations
+        ← Retour à mes réservations
       </Link>
 
       {pastReservations.length > 0 ? (

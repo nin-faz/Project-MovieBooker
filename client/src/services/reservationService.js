@@ -35,8 +35,6 @@ export const createReservation = async (movieId, reservedAt) => {
 
 export const getMyReservations = async () => {
   try {
-    if (!token) throw new Error("Token manquant");
-
     const response = await fetch(`${API_URL}/my-reservations`, {
       method: "GET",
       headers: {

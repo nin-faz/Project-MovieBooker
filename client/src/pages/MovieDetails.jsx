@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useMovieDetails from "../hooks/useMovieDetails";
 import { createReservation } from "../services/reservationService";
 import Calendar from "../components/Calendar";
 import Loader from "../components/Loader";
 import { toast } from "react-toastify";
+import { FaArrowLeft } from "react-icons/fa";
 
 const MovieDetails = () => {
   const { movieId } = useParams();
@@ -34,16 +35,26 @@ const MovieDetails = () => {
     }
   };
 
+  useEffect(() => {
+    if (movie && movie.title) {
+      document.title = `${movie.title} - Détails du film`;
+    }
+  }, [movie]);
+
   if (loading) return <Loader />;
   if (error) {
     toast.error(error);
   }
 
-  if (!movie) return <Loader />;
-
   return (
     <div className="min-h-screen bg-gray-800 text-white py-10">
       <div className="max-w-4xl mx-auto bg-gray-700 p-6 rounded-lg shadow-lg">
+        <button
+          onClick={() => navigate(-1)}
+          className="top-5 left-5 text-yellow-500 hover:text-yellow-400 transition-colors"
+        >
+          <FaArrowLeft size={30} />
+        </button>
         <h1 className="text-3xl font-bold mb-6 text-center">{movie.title}</h1>
 
         <div className="flex flex-col md:flex-row justify-between items-center mb-6">

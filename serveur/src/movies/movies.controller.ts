@@ -103,7 +103,12 @@ export class MoviesController {
         type: 'string',
         example: 'title.asc',
     })
-    getFilteredMovies(@Query() params: { sort: string }) {
+    @ApiQuery({
+        name: 'page',
+        type: Number,
+        example: 1,
+    })
+    getFilteredMovies(@Query() params: { sort: string; page: number }) {
         return this.moviesService.getFilteredMovies(params);
     }
 }

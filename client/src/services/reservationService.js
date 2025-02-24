@@ -2,10 +2,10 @@ import { toast } from "react-toastify";
 
 const API_URL = "https://back-project-moviebooker.onrender.com";
 
-const token = localStorage.getItem("token");
-
 export const createReservation = async (movieId, reservedAt) => {
   try {
+    const token = localStorage.getItem("token");
+
     if (!movieId || isNaN(movieId)) {
       throw new Error("movieId est invalide !");
     }
@@ -35,6 +35,8 @@ export const createReservation = async (movieId, reservedAt) => {
 
 export const getMyReservations = async () => {
   try {
+    const token = localStorage.getItem("token");
+    
     const response = await fetch(`${API_URL}/my-reservations`, {
       method: "GET",
       headers: {
@@ -62,6 +64,8 @@ export const deleteReservation = async (reservationId) => {
     if (!reservationId || isNaN(reservationId)) {
       throw new Error("ID de réservation invalide !");
     }
+
+    const token = localStorage.getItem("token");
 
     const response = await fetch(
       `${API_URL}/my-reservations/${Number(reservationId)}`,

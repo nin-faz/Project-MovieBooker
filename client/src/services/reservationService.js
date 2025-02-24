@@ -36,7 +36,7 @@ export const createReservation = async (movieId, reservedAt) => {
 export const getMyReservations = async () => {
   try {
     const token = localStorage.getItem("token");
-
+    
     const response = await fetch(`${API_URL}/my-reservations`, {
       method: "GET",
       headers: {

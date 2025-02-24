@@ -19,10 +19,10 @@ export class MoviesService {
             return this.getMovie({ title, page });
         }
         if (sort) {
-            return this.getFilteredMovies({ sort });
+            return this.getFilteredMovies({ sort, page });
         }
 
-        const url = 'https://api.themoviedb.org/3/movie/popular';
+        const url = `https://api.themoviedb.org/3/movie/popular?page=${page}`;
         const options = {
             method: 'GET',
             headers: {
@@ -116,7 +116,7 @@ export class MoviesService {
         return response;
     }
 
-    async getFilteredMovies({ sort }: { sort: string }) {
+    async getFilteredMovies({ sort, page }: { sort: string; page: number }) {
         const filter = [
             'original_title.asc',
             'original_title.desc',
@@ -138,7 +138,7 @@ export class MoviesService {
             throw new BadRequestException('Invalid sort parameter');
         }
 
-        const url = `https://api.themoviedb.org/3/discover/movie?sort_by=${sort}&language=en-US`;
+        const url = `https://api.themoviedb.org/3/discover/movie?sort_by=${sort}&page=${page}&language=en-US`;
         const options = {
             method: 'GET',
             headers: {
@@ -147,7 +147,7 @@ export class MoviesService {
             },
         };
 
-        const response = fetch(url, options)
+        const response = await fetch(url, options)
             .then((res) => res.json())
             .catch((err) => console.error(err));
 

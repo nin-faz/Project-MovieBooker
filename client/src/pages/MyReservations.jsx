@@ -3,19 +3,24 @@ import Loader from "../components/Loader";
 import { toast } from "react-toastify";
 import { FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 
 const MyReservations = () => {
   const { reservations, loading, error, handleDeleteReservation } =
     useReservations();
 
+  useEffect(() => {
+    document.title = "Mes réservations";
+  }, []);
+
   if (loading) return <Loader />;
-  if (error) toast.error(error);
+  if (error) {
+    toast.error(error);
+  }
 
   // Séparer les réservations passées et futures
   const now = new Date();
-  const pastReservations = reservations.filter(
-    (res) => new Date(res.endsAt) < now
-  );
+
   const upcomingReservations = reservations.filter(
     (res) => new Date(res.endsAt) >= now
   );

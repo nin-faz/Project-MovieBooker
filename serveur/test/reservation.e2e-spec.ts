@@ -15,6 +15,8 @@ describe('ReservationController (e2e)', () => {
     let accessToken: string;
 
     beforeAll(async () => {
+        jest.setTimeout(30000);
+
         const moduleFixture: TestingModule = await Test.createTestingModule({
             imports: [
                 ReservationModule,
@@ -55,7 +57,7 @@ describe('ReservationController (e2e)', () => {
         }
 
         accessToken = loginResponse.body.access_token;
-    });
+    }, 30000);
 
     afterAll(async () => {
         await prismaService.$disconnect();

@@ -7,6 +7,7 @@ import {
 
 const useMovies = (searchQuery = "", filter = "", page = 1) => {
   const [movies, setMovies] = useState([]);
+  const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -19,12 +20,15 @@ const useMovies = (searchQuery = "", filter = "", page = 1) => {
         if (searchQuery) {
           data = await searchMovies(searchQuery, page);
         } else if (filter) {
-          data = await filterMovies(filter);
+          data = await filterMovies(filter, page);
         } else {
           data = await fetchMovies(page);
         }
 
-        setMovies(data || []);
+        console.log("Total Pages:", data.totalPages);
+
+        setMovies(data.results || []);
+        setTotalPages(data.totalPages || 1);
       } catch (err) {
         console.error("Erreur lors du chargement des films :", err);
         setError("Erreur lors du chargement des films.");
@@ -36,7 +40,7 @@ const useMovies = (searchQuery = "", filter = "", page = 1) => {
     loadMovies();
   }, [searchQuery, filter, page]);
 
-  return { movies, loading, error };
+  return { movies, totalPages, loading, error };
 };
 
 export default useMovies;

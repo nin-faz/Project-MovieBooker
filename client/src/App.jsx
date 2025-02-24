@@ -7,6 +7,7 @@ import MyReservations from "./pages/MyReservations";
 import Layout from "./components/Layout";
 import Profile from "./pages/Profile";
 import MyReservationsHistory from "./pages/MyReservationsHistory";
+import ProtectedRoute from "./routes/ProtectedRoute";
 
 function App() {
   return (
@@ -16,15 +17,38 @@ function App() {
       <Router>
         <Layout>
           <Routes>
+            {/*Public Routes*/}
             <Route path="/" element={<HomePage />} />
             <Route path="/movies/:movieId" element={<MovieDetails />} />
             <Route path="/auth" element={<AuthPage />} />
-            <Route path="/my-reservations" element={<MyReservations />} />
+
+            {/*Private Routes*/}
+            <Route
+              path="/my-reservations"
+              element={
+                <ProtectedRoute>
+                  <MyReservations />{" "}
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="my-reservations-history"
-              element={<MyReservationsHistory />}
+              element={
+                <ProtectedRoute>
+                  <MyReservationsHistory />
+                </ProtectedRoute>
+              }
             />
-            <Route path="/profile" element={<Profile />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Not found Routes */}
             <Route
               path="*"
               element={

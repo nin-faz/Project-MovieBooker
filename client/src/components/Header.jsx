@@ -26,50 +26,6 @@ const Header = () => {
         </button>
       </div>
 
-      {/* Menu Desktop */}
-      {/* <nav className="hidden md:flex items-center text-lg flex-grow justify- space-x-6 px-16">
-          <button
-            onClick={() => navigate("/")}
-            className="hover:text-yellow-500 transition"
-          >
-            Accueil
-          </button>
-          <button
-            onClick={() => navigate("/my-reservations")}
-            className="hover:text-yellow-500 transition"
-          >
-            Réservations
-          </button>
-          <button
-            onClick={() => navigate("/contact")}
-            className="hover:text-yellow-500 transition"
-          >
-            Contact
-          </button>
-        </nav> */}
-
-      {/* Ajout d'un espace avant le bouton */}
-      {/* <div className="hidden md:flex ml-auto pl-6">
-          {user ? (
-            <button
-              onClick={() => {
-                logout();
-                toast.success("Déconnexion réussie !");
-              }}
-              className="ml-6 bg-red-500 px-4 py-2 rounded-lg hover:bg-red-600 transition shadow-md"
-            >
-              Déconnexion
-            </button>
-          ) : (
-            <button
-              onClick={() => navigate("/auth")}
-              className="ml-6 bg-indigo-500 px-4 py-2 rounded-lg hover:bg-indigo-600 transition shadow-md"
-            >
-              Connexion / Inscription
-            </button>
-          )}
-        </div> */}
-
       {/* Sidebar */}
       <div
         className={`fixed top-0 right-0 w-64 bg-gray-800 text-white transform ${
